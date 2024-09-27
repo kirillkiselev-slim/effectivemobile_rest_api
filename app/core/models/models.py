@@ -11,7 +11,7 @@ class Product(Base):
     __tablename__ = 'products'
     __table_args__ = (
         UniqueConstraint('name', name='unique_name'),
-        CheckConstraint('price >= 0', name='check_price'),
+        CheckConstraint('price > 0', name='check_price'),
         CheckConstraint('amount_left >= 0', name='check_amount'),
     )
 
@@ -25,7 +25,8 @@ class Product(Base):
         'OrderItem', back_populates='product')
 
     def __repr__(self):
-        return f"<Product(id={self.id}, name='{self.name}', price={self.price})>"
+        return (f"<Product(id={self.id}, name='{self.name}',"
+                f" price={self.price})>")
 
     def __str__(self):
         return (f"Product '{self.name}' (ID: {self.id}) - "
@@ -36,8 +37,10 @@ class Order(Base):
     __tablename__ = 'orders'
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
-    status: Mapped[str] = mapped_column(String(55), nullable=False, default='В процессе')
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, server_default=func.now())
+    status: Mapped[str] = mapped_column(
+        String(55), nullable=False, default='В процессе')
 
     order_items: Mapped[list['OrderItem']] = relationship(
         'OrderItem', back_populates='order')
