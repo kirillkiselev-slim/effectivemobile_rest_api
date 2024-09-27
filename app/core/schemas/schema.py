@@ -41,7 +41,8 @@ class OrderCreate(OrderBase):
     @field_validator('status')
     @classmethod
     def check_status(cls, status: str) -> str:
-        assert status.lower() in ALLOWED_STATUSES,\
-            f'{status} not in allowed statuses'
-        return status.lower()
+        status_lower = status.lower()
+        if status_lower not in ALLOWED_STATUSES:
+            raise ValueError(f'{status} not in allowed statuses')
+        return status_lower
 
