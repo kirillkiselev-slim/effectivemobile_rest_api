@@ -2,41 +2,33 @@ import datetime
 
 from pydantic import BaseModel, fields, field_validator
 
-from api.constants import ALLOWED_STATUSES
+from app.v1.api.constants import ALLOWED_STATUSES
 
 
 class BaseConfigModel(BaseModel):
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
-class ProductBase(BaseConfigModel):
+class ProductCreate(BaseConfigModel):
     name: str = fields.Field(max_length=255, min_length=3)
     description: str | None = None
     price: int = fields.Field(ge=1)
     amount_left: int = fields.Field(ge=0)
 
 
-class ProductGet(ProductBase):
-    id: int = fields.Field()
-
-
-class ProductCreate(ProductBase):
-    pass
-
-
-class OrderBase(BaseConfigModel):
-    created_at: datetime.datetime = datetime.datetime.now(datetime.UTC)
-    status: str = fields.Field(
-        min_length=5, examples=[ALLOWED_STATUSES])
-
-
-class OrderGet(OrderBase):
+class ProductGet(BaseConfigModel):
     id: int
+    name: str
+    description: str
+    price: int
+    amount_left: int
 
 
-class OrderCreate(OrderBase):
+class OrderCreate(BaseConfigModel):
+    created_at: datetime.datetime = datetime.datetime.now(datetime.UTC)
+    status: str = fields.Field(min_length=5, default='в процессе')
 
     @field_validator('status')
     @classmethod
@@ -45,4 +37,11 @@ class OrderCreate(OrderBase):
         if status_lower not in ALLOWED_STATUSES:
             raise ValueError(f'{status} not in allowed statuses')
         return status_lower
+
+
+class OrderGet(BaseConfigModel):
+    id: int
+    created_at: datetime.datetime = datetime.datetime.now(datetime.UTC)
+    status: str = fields.Field(min_length=5, default='в процессе')
+
 
