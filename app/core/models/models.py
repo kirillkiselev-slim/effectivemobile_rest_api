@@ -1,10 +1,9 @@
-from sqlalchemy import (Integer, String, Text, ForeignKey,
-                        DateTime, func, UniqueConstraint, CheckConstraint)
-from sqlalchemy.orm import (declarative_base, relationship,
-                            Mapped, mapped_column)
 from datetime import datetime
 
-Base = declarative_base()
+from sqlalchemy import (Integer, String, Text, ForeignKey,
+                        DateTime, func, UniqueConstraint, CheckConstraint)
+from sqlalchemy.orm import relationship, Mapped, mapped_column
+from .database import Base
 
 
 class Product(Base):
@@ -16,7 +15,8 @@ class Product(Base):
     )
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    name: Mapped[str] = mapped_column(String(255), nullable=False,
+                                      unique=True)
     description: Mapped[str] = mapped_column(Text, nullable=True)
     price: Mapped[int] = mapped_column(Integer, nullable=False)
     amount_left: Mapped[int] = mapped_column(Integer, nullable=False)
