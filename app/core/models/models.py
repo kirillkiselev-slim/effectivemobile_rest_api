@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import List
 
 from sqlalchemy import (Integer, String, Text, ForeignKey,
                         DateTime, func, UniqueConstraint, CheckConstraint)
@@ -43,7 +44,8 @@ class Order(Base):
         DateTime, server_default=func.now())
     status: Mapped[str] = mapped_column(
         String(55), nullable=False, default='В процессе')
-
+    items: Mapped[List[int]] = mapped_column(nullable=True,
+                                              default_factory=list)
     order_items: Mapped[list['OrderItem']] = relationship(
         'OrderItem', back_populates='order')
 
