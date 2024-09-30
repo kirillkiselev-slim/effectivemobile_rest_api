@@ -1,14 +1,14 @@
 import datetime
-from typing import Dict, List
+from typing import Dict, Annotated
 
-from pydantic import BaseModel, fields, field_validator
+from pydantic import BaseModel, fields, conint
 
-from app.v1.api.constants import (ALLOWED_STATUSES,
-                                  EXAMPLE_PRODUCTS, DESCRIPTION)
+from app.v1.api.constants import (REGEX, DESCRIPTION_AMOUNT_PRODUCTS,
+                                  EXAMPLE_PRODUCTS, DESCRIPTION_PRODUCTS,
+                                  DESCRIPTION_STATUS)
 
 
 class BaseConfigModel(BaseModel):
-
     class Config:
         from_attributes = True
 
@@ -29,34 +29,24 @@ class ProductGet(BaseConfigModel):
 
 
 class OrderCreate(BaseConfigModel):
-    status: str = fields.Field(min_length=5, default='в процессе')
-    products: Dict[int, int] = fields.Field(
-        Dict, description=DESCRIPTION, examples=[EXAMPLE_PRODUCTS])
+    status: str = fields.Field(min_length=5, default='в процессе',
+                               pattern=REGEX, description=DESCRIPTION_STATUS)
 
-    @field_validator('status')
-    @classmethod
-    def check_status(cls, status: str) -> str:
-        status_lower = status.lower()
-        if status_lower not in ALLOWED_STATUSES:
-            raise ValueError(f'{status} not in allowed statuses')
-        return status_lower
+    products: Dict[int, Annotated[conint(ge=1), fields.Field(
+        description=DESCRIPTION_AMOUNT_PRODUCTS)]] = fields.Field(
+        default_factory=dict, description=DESCRIPTION_PRODUCTS,
+        examples=[EXAMPLE_PRODUCTS]
+    )
 
 
 class OrderGet(BaseConfigModel):
     id: int
     created_at: datetime.datetime = datetime.datetime.now(datetime.UTC)
     status: str
-    products: List = fields.Field(default_factory=list)
+    products: Dict[int, int] = fields.Field(
+        default_factory=dict, examples=[EXAMPLE_PRODUCTS])
 
 
-class OrderUpdate(BaseConfigModel):
-    status: str = fields.Field(min_length=5, default='в процессе')
-
-    @field_validator('status')
-    @classmethod
-    def check_status(cls, status: str) -> str:
-        status_lower = status.lower()
-        if status_lower not in ALLOWED_STATUSES:
-            raise ValueError(f'"{status}" недопустимый статус.'
-                             f'Весь список статусов {ALLOWED_STATUSES}')
-        return status_lower
+class OrderStatusUpdate(BaseConfigModel):
+    status: str = fields.Field(min_length=5, default='в процессе',
+                               pattern=REGEX, description=DESCRIPTION_STATUS)
