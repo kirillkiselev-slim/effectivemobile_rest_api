@@ -18,7 +18,8 @@ async def lifespan(app: FastAPI):
         await sessionmanager.close()
 
 
-app = FastAPI(lifespan=lifespan, title='Склад')
+app = FastAPI(lifespan=lifespan, title='Склад', docs_url='/api/docs',
+              redoc_url='/api/redoc')
 
 api_start = api
 

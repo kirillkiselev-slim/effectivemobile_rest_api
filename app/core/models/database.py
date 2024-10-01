@@ -17,7 +17,8 @@ load_dotenv()
 Base = declarative_base()
 
 
-# Взято за основу с этой статьи: https://praciano.com.br/fastapi-and-async-sqlalchemy-20-with-pytest-done-right.html
+# Взято за основу с этой статьи:
+# https://praciano.com.br/fastapi-and-async-sqlalchemy-20-with-pytest-done-right.html
 
 
 class DatabaseSessionManager:

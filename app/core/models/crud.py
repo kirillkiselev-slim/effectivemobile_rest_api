@@ -57,6 +57,9 @@ async def filter_name(
         model: Type[ModelType],
         item: ItemType,
         statement):
+    """
+    Функция, которая проверяет наличие такого же имени продукта.
+    """
     result = await db.execute(
         statement(model).filter(model.name == item.name))
 
@@ -72,6 +75,10 @@ async def check_product_amount_and_save(
         save_model: Type[ModelType],
         product_dict: Dict,
         order_id):
+    """
+    Проверяет наличие достаточного количества товара на складе и сохраняет заказ.
+    Если запрашиваемое количество превышает доступное, выбрасывается ошибка.
+    """
     for product_id, amount_request in product_dict.items():
         product = await get_or_404(db, model, product_id)
         if amount_request <= 0:

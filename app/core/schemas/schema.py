@@ -1,7 +1,8 @@
 import datetime
+from decimal import Decimal
 from typing import Dict, Annotated
 
-from pydantic import BaseModel, fields, conint
+from pydantic import BaseModel, fields, conint, ConfigDict
 
 from app.v1.api.constants import (REGEX, DESCRIPTION_AMOUNT_PRODUCTS,
                                   EXAMPLE_PRODUCTS, DESCRIPTION_PRODUCTS,
@@ -9,22 +10,21 @@ from app.v1.api.constants import (REGEX, DESCRIPTION_AMOUNT_PRODUCTS,
 
 
 class BaseConfigModel(BaseModel):
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class ProductCreateUpdate(BaseConfigModel):
     name: str = fields.Field(max_length=255, min_length=3)
     description: str | None = None
-    price: int = fields.Field(ge=1)
-    amount_left: int = fields.Field(ge=0)
+    price: Annotated[Decimal, fields.Field(Decimal, gt=0, decimal_places=2)]
+    amount_left: int = fields.Field(gt=0)
 
 
 class ProductGet(BaseConfigModel):
     id: int
     name: str
     description: str
-    price: int
+    price: float
     amount_left: int
 
 

@@ -7,6 +7,13 @@ from .database import Base
 
 
 class Product(Base):
+    """
+    Класс для представления продукта. Содержит поля:
+    id, name, description, price, amount_left и связь с OrderItem.
+    Обеспечивает уникальность имени и проверку на положительные
+    значения цены и количества.
+    """
+
     __tablename__ = 'products'
     __table_args__ = (
         UniqueConstraint('name', name='unique_name'),
@@ -35,6 +42,12 @@ class Product(Base):
 
 
 class Order(Base):
+    """
+    Класс для представления заказа. Содержит поля:
+    id, created_at, status и связь с OrderItem.
+    По умолчанию статус - "В процессе", дата создания устанавливается автоматически.
+    """
+
     __tablename__ = 'orders'
 
     id: Mapped[int] = mapped_column(
@@ -57,6 +70,13 @@ class Order(Base):
 
 
 class OrderItem(Base):
+    """
+    Класс для представления позиции заказа (OrderItem).
+    Связывает заказ и продукт, указывая количество продукта в заказе.
+    Содержит уникальное ограничение на сочетание order_id и
+    product_id для предотвращения дублирования.
+    """
+
     __tablename__ = 'order_items'
     __table_args__ = (
         UniqueConstraint('order_id', 'product_id',

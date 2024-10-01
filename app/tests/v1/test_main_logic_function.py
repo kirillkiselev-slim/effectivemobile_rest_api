@@ -7,7 +7,9 @@ from .constants_for_pytest import INSUFFICIENT_STOCK_MESSAGE
 from app.core.models.models import Product
 
 
-@pytest.mark.asyncio(loop_scope='function')
+pytest.mark.asyncio = pytest.mark.asyncio(loop_scope='function')
+
+
 async def test_insufficient_stock_and_error(
         post_incorrect_order, create_insufficient_stock_product):
     response = await post_incorrect_order
@@ -15,7 +17,6 @@ async def test_insufficient_stock_and_error(
     assert INSUFFICIENT_STOCK_MESSAGE in response.json()['detail']
 
 
-@pytest.mark.asyncio(loop_scope='function')
 async def test_decrease_amount_of_product(
         post_order, create_one_product, async_client, db_session):
     response = await post_order

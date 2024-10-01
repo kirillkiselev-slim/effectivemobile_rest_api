@@ -17,6 +17,9 @@ from app.tests.v1.constants_for_pytest import (CREATE_INCORRECT_ORDER,
 
 load_dotenv()
 
+# Взято за основу с этой статьи:
+# https://praciano.com.br/fastapi-and-async-sqlalchemy-20-with-pytest-done-right.html
+
 
 @pytest.fixture(autouse=True)
 async def app():
