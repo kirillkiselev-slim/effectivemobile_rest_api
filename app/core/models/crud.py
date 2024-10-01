@@ -90,4 +90,3 @@ async def check_product_amount_and_save(
         product.amount_left -= amount_request
         db.add(product)
     await db.commit()
-

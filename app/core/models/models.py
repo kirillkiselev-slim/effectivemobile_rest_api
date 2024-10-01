@@ -1,7 +1,6 @@
 from datetime import datetime
-from typing import List
 
-from sqlalchemy import (Integer, String, Text, ForeignKey,
+from sqlalchemy import (Integer, String, Text, ForeignKey, DECIMAL,
                         DateTime, func, UniqueConstraint, CheckConstraint)
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from .database import Base
@@ -20,11 +19,11 @@ class Product(Base):
     name: Mapped[str] = mapped_column(String(255), nullable=False,
                                       unique=True)
     description: Mapped[str] = mapped_column(Text, nullable=True)
-    price: Mapped[int] = mapped_column(Integer, nullable=False)
+    price: Mapped[float] = mapped_column(DECIMAL(10, 2), nullable=False)
     amount_left: Mapped[int] = mapped_column(Integer, nullable=False)
 
     order_items: Mapped[list['OrderItem']] = relationship(
-        'OrderItem', back_populates='product')
+        'OrderItem', back_populates='product', cascade='all, delete-orphan')
 
     def __repr__(self):
         return (f'<Product(id={self.id}, name="{self.name}",'
@@ -44,10 +43,8 @@ class Order(Base):
         DateTime, server_default=func.now())
     status: Mapped[str] = mapped_column(
         String(55), nullable=False, default='В процессе')
-    items: Mapped[List[int]] = mapped_column(nullable=True,
-                                              default_factory=list)
     order_items: Mapped[list['OrderItem']] = relationship(
-        'OrderItem', back_populates='order')
+        'OrderItem', back_populates='order', cascade='all, delete-orphan')
 
     def __repr__(self):
         return (f'<Order(id={self.id}, status="{self.status}",'
