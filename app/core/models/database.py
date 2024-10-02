@@ -7,7 +7,6 @@ from sqlalchemy.ext.asyncio import (
     AsyncSession,
     async_sessionmaker,
     create_async_engine,
-    AsyncAttrs
 )
 from sqlalchemy.orm import declarative_base
 from dotenv import load_dotenv
