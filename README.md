@@ -11,8 +11,8 @@
 1. Клонировать репозиторий и перейти в него в командной строке:
 
     ```bash
-    git clone https://github.com/kirillkiselev-slim/effective_mobile/
-    cd effective_mobile
+    git clone https://github.com/kirillkiselev-slim/effectivemobile_rest_api/
+    cd effectivemobile_rest_api
     ```
 
 2. Создать и активировать виртуальное окружение:
