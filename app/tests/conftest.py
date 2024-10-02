@@ -2,10 +2,10 @@ import asyncio
 from contextlib import ExitStack
 
 import httpx
-from dotenv import load_dotenv
 import pytest
 from httpx import ASGITransport
 from pytest_postgresql import factories
+import pytest_postgresql
 from pytest_postgresql.janitor import DatabaseJanitor
 
 from app.core.models.database import get_db, Base, DatabaseSessionManager
@@ -13,12 +13,13 @@ from app.main import app as actual_app
 from app.core.models.models import Product
 from app.tests.v1.constants_for_pytest import (CREATE_INCORRECT_ORDER,
                                                CREATE_ORDER, CREATE_ORDER_ID,
-                                               CREATE_ORDER_AMOUNT)
+                                               CREATE_ORDER_AMOUNT, PORT_TEST)
 
-load_dotenv()
 
 # Взято за основу с этой статьи:
 # https://praciano.com.br/fastapi-and-async-sqlalchemy-20-with-pytest-done-right.html
+
+pytest_postgresql.POSTGRESQL_BIN_DIR = '/usr/lib/postgresql/12/bin'
 
 
 @pytest.fixture(autouse=True)
@@ -43,7 +44,7 @@ def event_loop(request):
 
 
 warehouse_test_db = factories.postgresql_proc(
-    port=None, dbname='warehouse_test_db')
+    port=PORT_TEST, dbname='warehouse_test_db', password='password')
 
 
 @pytest.fixture(scope='session', autouse=True)
@@ -55,8 +56,8 @@ async def sessionmanager_fixture(warehouse_test_db):
     pg_db = warehouse_test_db.dbname
     pg_password = warehouse_test_db.password
 
-    connection = (f'postgresql+asyncpg://{pg_user}:{pg_password}@'
-                  f'{pg_host}:{pg_port}/{pg_db}')
+    connection = (f'postgresql+asyncpg://{pg_user}:{pg_password}@{pg_host}'
+                  f':{pg_port}/{pg_db}')
 
     sessionmanager = DatabaseSessionManager(connection, engine_kwargs={})
 
