@@ -40,8 +40,8 @@ async def get_product(product_id: int, db: AsyncSession = Depends(get_db)):
 @products.put('/{product_id}', response_model=ProductGet, status_code=200)
 async def change_product(product_id: int, new_product: ProductCreateUpdate,
                          db: AsyncSession = Depends(get_db)):
-    product = await get_or_404(db, Product, product_id)
-    await filter_name(db=db, model=Product, item=product, statement=select)
+    product = await get_or_404(db=db, model=Product, identifier=product_id)
+    await filter_name(db=db, model=Product, item=new_product, statement=select)
     product.name = new_product.name
     product.price = new_product.price
     product.description = new_product.description
