@@ -10,9 +10,6 @@ from app.core.models.database import sessionmanager
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """
-    Function that handles startup and shutdown events.
-    """
     yield
     if sessionmanager._engine is not None:
         await sessionmanager.close()
@@ -28,4 +25,4 @@ app.include_router(orders)
 
 
 if __name__ == '__main__':
-    uvicorn.run('main:app', host='127.0.0.1', reload=True, port=8000)
+    uvicorn.run('main:app', host='0.0.0.0', reload=True, port=8000)
