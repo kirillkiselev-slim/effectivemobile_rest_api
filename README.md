@@ -39,12 +39,18 @@
     python3 -m pip install --upgrade pip
     ```
 
-4. Пройдитесь тестами по проекту:
+5. Скачайте зависимости локально для тестов:
+
+```bash
+pip install -r requirements.txt
+```
+
+6. Пройдитесь тестами по проекту:
 
     ```bash
     pytest app/tests/v1
     ```
-5. Установите зависимости:
+7. Установите переменные окружения:
 
     ```text
    DATABASE_URL=postgresql+asyncpg://<your_username>:<your_password>@postgres/warehouse
