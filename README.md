@@ -46,7 +46,7 @@ pip install -r requirements.txt
 ```
 
 
-6. Установите переменные окружения (чтобы пройти тесты - установите локальную переменную для БД):
+6. Установите переменные окружения (чтобы пройти тесты - установите переменную окружения для локальной БД):
 
     ```text
    DATABASE_URL=postgresql+asyncpg://<your_username>:<your_password>@postgres/warehouse
@@ -71,13 +71,15 @@ DATABASE_URL=postgresql+asyncpg://<your_username>:<your_password>@localhost/ware
     pytest app/tests/v1
     ```
 
-8. Запустить Docker Compose для сборки и запуска контейнеров Postgresql и FastApi приложения:
+8. Запустить Docker Compose для сборки и запуска контейнеров Postgresql и FastApi приложения
+(чтобы запустить docker compose - поменяйте переменную окружения для БД на 
+`DATABASE_URL=postgresql+asyncpg://<your_username>:<your_password>@postgres/warehouse`):
 
-    ```bash
+   ```bash
     docker compose up --build
     ```
 
-    Это автоматически соберет образы и запустит контейнеры для PostgreSQL и backend-приложения.
+Это автоматически соберет образы и запустит контейнеры для PostgreSQL и backend-приложения.
 
 ## Примеры запросов
 
